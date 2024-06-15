@@ -1,0 +1,43 @@
+{
+  "name": "@crisvp/pb-extract",
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/extract.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "pb-extract": "dist/pb-tex.cli.js"
+  },
+  "scripts": {
+    "build": "tsc -b . -v && cp src/out.d.ts.hbs dist/",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@crisvp/pocketbase-js": "workspace:^",
+    "change-case": "^5.4.4",
+    "handlebars": "^4.7.8",
+    "sqlite3": "^5.1.7",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/handlebars-helpers": "^0.5.6",
+    "@types/node": "^20.14.2",
+    "@types/yargs": "^17.0.32",
+    "eslint": "^8.57.0",
+    "prettier": "3.2.4",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "prettier": {
+    "editorconfig": true,
+    "tabWidth": 2,
+    "printWidth": 120,
+    "bracketSameLine": true
+  }
+}

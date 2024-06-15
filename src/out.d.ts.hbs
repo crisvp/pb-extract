@@ -1,0 +1,14 @@
+{{! prettier-ignore }}
+/** Interface definitions. These represent Pocketbase collections. */
+
+{{! prettier-ignore }}
+declare module 'pb-tex' {
+{{#each tables}}
+
+  export interface {{pascalCase this.name "collection"}} {
+  {{#each this.schema}}
+    {{this.name}}: {{{this.tsType}}};
+  {{/each}}
+  }
+  {{/each}}
+}
