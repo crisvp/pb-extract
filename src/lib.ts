@@ -1,6 +1,7 @@
 import { Client as Pocketbase, type SchemaField } from "@crisvp/pocketbase-js";
 import { writeFileSync } from "fs";
 import path from "path";
+import { tsType } from "./translations";
 
 const pascalCase = require("change-case").pascalCase;
 
@@ -20,22 +21,6 @@ const DEFAULTS = {
   adminUser: "vite@localhost.local",
   adminPassword: "SecretPassword123",
 };
-
-function tsType(field: SchemaField) {
-  const { type } = field;
-  switch (type) {
-    case "text":
-      return "string";
-    case "date":
-      return "Date";
-    case "select":
-      return field.options.values.map((v: string) => `'${v}'`).join(" | ");
-    case "relation":
-      return `%%relation:${field.options.collectionId}`;
-    default:
-      return "unknown";
-  }
-}
 
 type Types = {
   [id: string]: {

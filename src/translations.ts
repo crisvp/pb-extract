@@ -88,6 +88,7 @@ export function tsType(field: SchemaField): string {
     case "date":
       return "Date";
     case "select":
+      if (!Array.isArray(field.options.values)) return "unknown";
       return field.options.values.map((v: string) => `'${v}'`).join(" | ");
     case "relation":
       return `%%relation:${field.options.collectionId}`;

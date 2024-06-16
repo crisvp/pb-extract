@@ -3,3 +3,5 @@ pocketbase.d.ts
 dist
 node_modules
 .nx
+tests/test-pocketbase.d.ts
+coverage
