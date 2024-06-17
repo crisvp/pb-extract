@@ -8,8 +8,8 @@
     "outDir": "./dist",
     "allowJs": true,
     "declaration": true,
-    "types": ["node"],
+    "types": ["node"]
   },
   "include": ["./src/**/*", "index.*"],
-  "exclude": ["node_modules/**/*"],
+  "exclude": ["node_modules/**/*"]
 }

@@ -1,11 +1,11 @@
-import type { SchemaField } from "@crisvp/pocketbase-js";
-import { ExtendedSchemaField, CollectionDescriptionRaw, CollectionDescription } from "./types";
-import { pascalCase } from "change-case";
+import type { SchemaField } from '@crisvp/pocketbase-js';
+import { ExtendedSchemaField, CollectionDescriptionRaw, CollectionDescription } from './types';
+import { pascalCase } from 'change-case';
 
 /**
  * Describes a collection of Pocketbase collections.
  */
-export type SchemaTranslations = Record<string, Omit<CollectionDescription, "id" | "type">>;
+export type SchemaTranslations = Record<string, Omit<CollectionDescription, 'id' | 'type'>>;
 
 /**
  * Translates '%%relation:collectionId' to 'CollectionNameCollection'.
@@ -15,11 +15,11 @@ export type SchemaTranslations = Record<string, Omit<CollectionDescription, "id"
  * @returns {ExtendedSchemaField}
  */
 export function translateRelation(field: ExtendedSchemaField, schemas: SchemaTranslations): ExtendedSchemaField {
-  if (!field.tsType.startsWith("%%relation:")) return field;
+  if (!field.tsType.startsWith('%%relation:')) return field;
 
-  const collectionId = field.tsType.replace("%%relation:", "");
+  const collectionId = field.tsType.replace('%%relation:', '');
   const collectionName = schemas[collectionId]?.name;
-  field.tsType = collectionName ? `${pascalCase(collectionName)}Collection` : "unknown";
+  field.tsType = collectionName ? `${pascalCase(collectionName)}Collection` : 'unknown';
   return field;
 }
 
@@ -32,30 +32,30 @@ export function translateRelation(field: ExtendedSchemaField, schemas: SchemaTra
 export function addDefaultFields(row: CollectionDescription): CollectionDescription {
   const defaultFields: ExtendedSchemaField[] = [
     {
-      id: "unknown",
-      name: "id",
-      type: "text",
-      tsType: "string",
+      id: 'unknown',
+      name: 'id',
+      type: 'text',
+      tsType: 'string',
       required: true,
       system: false,
       presentable: true,
       options: {},
     },
     {
-      id: "unknown",
-      name: "created_at",
-      type: "date",
-      tsType: "Date",
+      id: 'unknown',
+      name: 'created_at',
+      type: 'date',
+      tsType: 'Date',
       required: true,
       system: false,
       presentable: true,
       options: {},
     },
     {
-      id: "unknown",
-      name: "updated_at",
-      type: "date",
-      tsType: "Date",
+      id: 'unknown',
+      name: 'updated_at',
+      type: 'date',
+      tsType: 'Date',
       required: true,
       system: false,
       presentable: true,
@@ -91,22 +91,22 @@ export function extendField(field: SchemaField): ExtendedSchemaField {
 export function tsType(field: SchemaField): string {
   const { type } = field;
   switch (type) {
-    case "text":
-      return "string";
-    case "date":
-      return "Date";
-    case "select":
-      if (!Array.isArray(field.options.values)) return "unknown";
-      return field.options.values.map((v: string) => `'${v}'`).join(" | ");
-    case "relation":
+    case 'text':
+      return 'string';
+    case 'date':
+      return 'Date';
+    case 'select':
+      if (!Array.isArray(field.options.values)) return 'unknown';
+      return field.options.values.map((v: string) => `'${v}'`).join(' | ');
+    case 'relation':
       return `%%relation:${field.options.collectionId}`;
     default:
-      return "unknown";
+      return 'unknown';
   }
 }
 
 export function normalizeDescriptions(
-  rows: Partial<CollectionDescription>[] | CollectionDescriptionRaw[],
+  rows: Partial<CollectionDescription>[] | CollectionDescriptionRaw[]
 ): CollectionDescription[] {
   if (!Array.isArray(rows)) return [];
 
@@ -117,7 +117,7 @@ export function normalizeDescriptions(
       schema: Array.isArray(row.schema) ? row.schema : (JSON.parse(row.schema) as SchemaField[]),
     }))
     /* Step 2: Extend the schema field with TypeScript types. */
-    .map((row) => ({
+    .map(row => ({
       id: row.id,
       name: row.name,
       type: row.type,
@@ -129,10 +129,10 @@ export function normalizeDescriptions(
   /* Step 4a: Build an index of collection names and schemas, now that we have TypeScript interfaces. */
   const schemas: SchemaTranslations = processed.reduce(
     (acc, t) => ((acc[t.id] = { name: t.name, schema: t.schema }), acc),
-    {} as SchemaTranslations,
+    {} as SchemaTranslations
   );
   /* Step 4b: Substitute '%%relation:<xyz>' placeholder types with their TypeScript interfaces. */
-  processed.forEach((t) => (t.schema = t.schema.map((s) => translateRelation(s, schemas))));
+  processed.forEach(t => (t.schema = t.schema.map(s => translateRelation(s, schemas))));
 
   return processed;
 }

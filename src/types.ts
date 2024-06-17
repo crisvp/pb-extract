@@ -1,4 +1,4 @@
-import { SchemaField } from "@crisvp/pocketbase-js";
+import { SchemaField } from '@crisvp/pocketbase-js';
 
 /**
  * Describes a column in a Pocketbase collection, along with its TypeScript type.

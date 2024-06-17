@@ -1,7 +1,7 @@
-import { BaseAuthStore, Client } from "@crisvp/pocketbase-js";
+import { BaseAuthStore, Client } from '@crisvp/pocketbase-js';
 
-import { CollectionDescription, CollectionDescriptionRaw } from "./types";
-import { normalizeDescriptions } from "./translations.js";
+import { CollectionDescription, CollectionDescriptionRaw } from './types';
+import { normalizeDescriptions } from './translations.js';
 
 export interface ConnectOptions {
   authStore?: BaseAuthStore;
@@ -14,10 +14,10 @@ export interface ClientOptions {
 }
 
 export async function connectDatabase(
-  url: string = "http://127.0.0.1:8090/",
+  url: string = 'http://127.0.0.1:8090/',
   adminUser: string,
   adminPassword: string,
-  connectOptions: ConnectOptions = {},
+  connectOptions: ConnectOptions = {}
 ): Promise<Client> {
   const opts = {
     ...connectOptions,
@@ -27,7 +27,7 @@ export async function connectDatabase(
   try {
     await pb.admins.authWithPassword(adminUser, adminPassword);
   } catch (e) {
-    if (e.status === 401) throw new Error("Failed to authenticate admin user");
+    if (e.status === 401) throw new Error('Failed to authenticate admin user');
     else throw e;
   }
   return pb;
@@ -35,14 +35,14 @@ export async function connectDatabase(
 
 async function collectionsTable(pb: Client): Promise<CollectionDescriptionRaw[]> {
   const allCollections = (await pb.collections.getFullList()) as unknown as CollectionDescriptionRaw[];
-  const collections = allCollections.filter((r) => !r.name.startsWith("_"));
+  const collections = allCollections.filter(r => !r.name.startsWith('_'));
 
   return collections;
 }
 
 export async function readCollections(
   url: string,
-  { adminUser, adminPassword }: ClientOptions,
+  { adminUser, adminPassword }: ClientOptions
 ): Promise<CollectionDescription[]> {
   const pb = await connectDatabase(url, adminUser, adminPassword);
   const collections = await collectionsTable(pb);

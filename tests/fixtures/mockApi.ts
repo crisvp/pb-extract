@@ -1,23 +1,23 @@
-import { setupServer as mswSetupServer } from "msw/node";
-import { http, HttpResponse, bypass } from "msw";
+import { setupServer as mswSetupServer } from 'msw/node';
+import { http, HttpResponse, bypass } from 'msw';
 
-export const ADMIN_IDENTITY = "test@example.com";
-export const ERROR_IDENTITY = "_ERROR";
-export const NOT_EMAIL_IDENTITY = "not-an-email";
+export const ADMIN_IDENTITY = 'test@example.com';
+export const ERROR_IDENTITY = '_ERROR';
+export const NOT_EMAIL_IDENTITY = 'not-an-email';
 
-import util from "util";
+import util from 'util';
 
 function fauxthenticate(identity: string) {
   const successful = {
     admin: {
-      id: "vmbkk4rlpo1no9s",
-      created: "2024-06-17 17:33:52.029Z",
-      updated: "2024-06-17 17:33:52.029Z",
+      id: 'vmbkk4rlpo1no9s',
+      created: '2024-06-17 17:33:52.029Z',
+      updated: '2024-06-17 17:33:52.029Z',
       avatar: 0,
       email: identity,
     },
     token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk4NTg5NTAsImlkIjoidm1ia2s0cmxwbzFubzlzIiwidHlwZSI6ImFkbWluIn0.kbWV_9ERISl6GZ6xjYnURUwz5EKJGHxQ4ST70cvEpgA",
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk4NTg5NTAsImlkIjoidm1ia2s0cmxwbzFubzlzIiwidHlwZSI6ImFkbWluIn0.kbWV_9ERISl6GZ6xjYnURUwz5EKJGHxQ4ST70cvEpgA',
   };
 
   if (identity === ADMIN_IDENTITY) {
@@ -33,17 +33,17 @@ function fauxthenticate(identity: string) {
 
 const invalidEmailResponse = {
   code: 400,
-  message: "Something went wrong while processing your request.",
+  message: 'Something went wrong while processing your request.',
   data: {
     identity: {
-      code: "validation_is_email",
-      message: "Must be a valid email address.",
+      code: 'validation_is_email',
+      message: 'Must be a valid email address.',
     },
   },
 };
 
 const restHandlers = [
-  http.post("http://*:8090/api/admins/auth-with-password", async ({ request }) => {
+  http.post('http://*:8090/api/admins/auth-with-password', async ({ request }) => {
     const requestBody = (await request.json()) as {
       identity: string;
       password: string;
@@ -52,8 +52,8 @@ const restHandlers = [
     const response = fauxthenticate(identity);
     return HttpResponse.json(...response);
   }),
-  http.get("http://*:8090/api/collections", async ({ request }) => {
-    const collections = (await import("./collections.response.ts")).default;
+  http.get('http://*:8090/api/collections', async ({ request }) => {
+    const collections = (await import('./collections.response.ts')).default;
     return HttpResponse.json(collections);
   }),
 ];

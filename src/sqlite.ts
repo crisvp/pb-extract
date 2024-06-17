@@ -1,8 +1,8 @@
-import sqlite3 from "sqlite3";
-import fs from "fs";
-import path from "path";
-import { CollectionDescriptionRaw, CollectionDescription } from "./types";
-import { normalizeDescriptions } from "./translations.js";
+import sqlite3 from 'sqlite3';
+import fs from 'fs';
+import path from 'path';
+import { CollectionDescriptionRaw, CollectionDescription } from './types';
+import { normalizeDescriptions } from './translations.js';
 
 /**
  * Open the database file.
@@ -24,7 +24,7 @@ function openDatabase(fileName: string): sqlite3.Database {
  */
 function collectionsTable(db: sqlite3.Database): Promise<CollectionDescriptionRaw[]> {
   return new Promise<CollectionDescriptionRaw[]>((resolve, reject) => {
-    db.all("select id, type, name, schema from `_collections`", function (err, rows: CollectionDescriptionRaw[]) {
+    db.all('select id, type, name, schema from `_collections`', function (err, rows: CollectionDescriptionRaw[]) {
       if (err) reject(err);
       else resolve(rows);
     });

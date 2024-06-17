@@ -1,4 +1,4 @@
-import handlebars from "handlebars";
+import handlebars from 'handlebars';
 
 /**
  * Handlebars helper to convert a string to PascalCase. Pass any number of arguments.
@@ -7,11 +7,11 @@ import handlebars from "handlebars";
  * @returns {string}
  */
 function pascalCase(...args: any[]): string {
-    return args
-      .filter((a) => typeof a === "string")
-      .map((s) => s[0].toUpperCase() + s.slice(1))
-      .join("");
-  }
+  return args
+    .filter(a => typeof a === 'string')
+    .map(s => s[0].toUpperCase() + s.slice(1))
+    .join('');
+}
 
 handlebars.registerHelper({ pascalCase });
 export default handlebars;
