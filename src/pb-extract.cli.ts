@@ -1,18 +1,19 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import fs from "fs";
-import path from "path";
-import { extractTypes } from "./index.js";
+import { readCollections as apiCollections } from "./api.js";
+import { readCollections as dbCollections } from "./sqlite.js";
+import { writeDeclarations } from "./declarations.js";
 
-function extract({ input, output }) {
+async function extract({ input, output }) {
   if (!fs.existsSync(input)) throw new Error(`File not found: ${input}`);
-
-  extractTypes(input).then((outputStr) => fs.writeFileSync(path.resolve(output), outputStr));
+  const outputStr = await dbCollections(input);
+  await writeDeclarations(outputStr, output);
 }
 
-function main(argv: string[] = process.argv) {
+async function main(argv: string[] = process.argv) {
   try {
-    yargs(hideBin(argv))
+    await yargs(hideBin(argv))
       .command(
         ["extract <input> [output]", "e"],
         "Extract types from a Pocketbase file",
@@ -24,12 +25,55 @@ function main(argv: string[] = process.argv) {
           },
           output: {
             hidden: true,
-            describe: "Pocketbase database file",
+            describe: "Output declaration file",
             default: "pocketbase.d.ts",
             type: "string",
           },
         },
         extract,
+      )
+      .command(
+        ["dump [...options] <url>", "d"],
+        "Dump types from a Pocketbase server",
+        {
+          url: {
+            hidden: true,
+            describe: "Pocketbase server to connect to",
+            type: "string",
+          },
+          user: {
+            hidden: false,
+            default: "$POCKETBASE_USER",
+            describe: "Pocketbase admin user identity",
+            type: "string",
+          },
+          password: {
+            hidden: false,
+            default: "$POCKETBASE_PASSWORD",
+            describe: "Pocketbase admin user password",
+            type: "string",
+          },
+          output: {
+            hidden: false,
+            default: "pocketbase.d.ts",
+            describe: "Output declaration file",
+            type: "string",
+          },
+        },
+        async ({ url, user, password, output }) => {
+          url ??= process.env.POCKETBASE_URL;
+          user = user === "$POCKETBASE_USER" ? process.env.POCKETBASE_USER : user;
+          password = password === "$POCKETBASE_PASSWORD" ? process.env.POCKETBASE_PASSWORD : password;
+
+          if (!user || !password) {
+            throw new Error(
+              "Missing user or password. Specify on the commandline, or set $POCKETBASE_USER and $POCKETBASE_PASSWORD environment variables.",
+            );
+          }
+
+          const collections = await apiCollections(url, { adminUser: user, adminPassword: password });
+          await writeDeclarations(collections, output);
+        },
       )
       .requiresArg("inputPath")
       .string(["inputPath", "outputPath"])
@@ -48,7 +92,7 @@ const entryFile = process.argv?.[1];
 /* v8 ignore next 7 */
 if (entryFile === import.meta.filename) {
   try {
-    main(process.argv);
+    await main(process.argv);
   } catch (e) {
     console.error(e.message);
   }

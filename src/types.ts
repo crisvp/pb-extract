@@ -14,19 +14,9 @@ export interface ExtendedSchemaField extends SchemaField {
 }
 
 /**
- * Describes a collection of Pocketbase collections.
+ * Describes an Pocketbase collection;
  */
-export type Schemas = {
-  [id: string]: {
-    name: string;
-    schema: ExtendedSchemaField[];
-  };
-};
-
-/**
- * Describes an entry in Pocketbase's `_collections` table.
- */
-export type Row = {
+export type CollectionDescription = {
   id: string;
   type: string;
   name: string;
@@ -34,9 +24,9 @@ export type Row = {
 };
 
 /**
- * Describes an entry in Pocketbase's '_collections' table, with schema as a JSON string.
+ * Describes a Pocketbase collection, with schema as a JSON string.
  */
-export type RawRow = {
+export type CollectionDescriptionRaw = {
   id: string;
   type: string;
   name: string;

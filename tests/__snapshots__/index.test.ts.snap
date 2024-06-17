@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`index > exports objects 1`] = `
+{
+  "addDefaultFields": [Function],
+  "extendField": [Function],
+  "normalizeDescriptions": [Function],
+  "readCollections": [Function],
+  "translateRelation": [Function],
+  "tsType": [Function],
+  "writeDeclarations": [Function],
+}
+`;

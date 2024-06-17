@@ -1,4 +1,4 @@
-*.db*
+*.db-*
 pocketbase.d.ts
 dist
 node_modules
