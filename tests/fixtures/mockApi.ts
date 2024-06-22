@@ -5,8 +5,6 @@ export const ADMIN_IDENTITY = 'test@example.com';
 export const ERROR_IDENTITY = '_ERROR';
 export const NOT_EMAIL_IDENTITY = 'not-an-email';
 
-import util from 'util';
-
 function fauxthenticate(identity: string) {
   const successful = {
     admin: {
