@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { readCollections } from '../src/sqlite';
-import fs from 'node:fs';
 
 describe('sqlite', () => {
   it('should throw when file does not exist', async () => {
